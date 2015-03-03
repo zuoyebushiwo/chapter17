@@ -70,5 +70,6 @@
 	<classpathentry kind="lib" path="lib/unitils-spring-3.1.jar"/>
 	<classpathentry kind="lib" path="lib/unitils-testng-3.1.jar"/>
 	<classpathentry kind="lib" path="lib/persistence-api-1.0.jar"/>
+	<classpathentry kind="lib" path="lib/ehcache-1.2.4.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
