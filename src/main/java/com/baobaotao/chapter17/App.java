@@ -1,4 +1,4 @@
-package baobaotao.chapter17;
+package com.baobaotao.chapter17;
 
 /**
  * Hello world!
