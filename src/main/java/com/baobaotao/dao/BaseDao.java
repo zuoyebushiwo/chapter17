@@ -17,10 +17,11 @@ import org.springframework.util.Assert;
 /**
  * DAO基类，其它DAO可以直接继承这个DAO，不但可以复用共用的方法，还可以获得泛型的好处。
  */
-public class BaseDao<T>{
+public class BaseDao<T> {
 	private Class<T> entityClass;
 	@Autowired
 	private HibernateTemplate hibernateTemplate;
+
 	/**
 	 * 通过反射获取子类确定的泛型类
 	 */
@@ -58,7 +59,7 @@ public class BaseDao<T>{
 	public List<T> loadAll() {
 		return getHibernateTemplate().loadAll(entityClass);
 	}
-	
+
 	/**
 	 * 保存PO
 	 * 
@@ -104,28 +105,31 @@ public class BaseDao<T>{
 	 * @return 查询结果
 	 */
 	public List find(String hql, Object... params) {
-		return this.getHibernateTemplate().find(hql,params);
+		return this.getHibernateTemplate().find(hql, params);
 	}
-    
+
 	/**
 	 * 对延迟加载的实体PO执行初始化
+	 * 
 	 * @param entity
 	 */
 	public void initialize(Object entity) {
 		this.getHibernateTemplate().initialize(entity);
 	}
-	
-	
+
 	/**
 	 * 分页查询函数，使用hql.
 	 *
-	 * @param pageNo 页号,从1开始.
+	 * @param pageNo
+	 *            页号,从1开始.
 	 */
-	public Page pagedQuery(String hql, int pageNo, int pageSize, Object... values) {
+	public Page pagedQuery(String hql, int pageNo, int pageSize,
+			Object... values) {
 		Assert.hasText(hql);
 		Assert.isTrue(pageNo >= 1, "pageNo should start from 1");
 		// Count查询
-		String countQueryString = " select count (*) " + removeSelect(removeOrders(hql));
+		String countQueryString = " select count (*) "
+				+ removeSelect(removeOrders(hql));
 		List countlist = getHibernateTemplate().find(countQueryString, values);
 		long totalCount = (Long) countlist.get(0);
 
@@ -134,18 +138,23 @@ public class BaseDao<T>{
 		// 实际查询返回分页对象
 		int startIndex = Page.getStartOfPage(pageNo, pageSize);
 		Query query = createQuery(hql, values);
-		List list = query.setFirstResult(startIndex).setMaxResults(pageSize).list();
+		List list = query.setFirstResult(startIndex).setMaxResults(pageSize)
+				.list();
 
 		return new Page(startIndex, totalCount, pageSize, list);
 	}
 
 	/**
-	 * 创建Query对象. 对于需要first,max,fetchsize,cache,cacheRegion等诸多设置的函数,可以在返回Query后自行设置.
+	 * 创建Query对象.
+	 * 对于需要first,max,fetchsize,cache,cacheRegion等诸多设置的函数,可以在返回Query后自行设置.
 	 * 留意可以连续设置,如下：
+	 * 
 	 * <pre>
 	 * dao.getQuery(hql).setMaxResult(100).setCacheable(true).list();
 	 * </pre>
+	 * 
 	 * 调用方式如下：
+	 * 
 	 * <pre>
 	 *        dao.createQuery(hql)
 	 *        dao.createQuery(hql,arg0);
@@ -153,7 +162,8 @@ public class BaseDao<T>{
 	 *        dao.createQuery(hql,new Object[arg0,arg1,arg2])
 	 * </pre>
 	 *
-	 * @param values 可变参数.
+	 * @param values
+	 *            可变参数.
 	 */
 	public Query createQuery(String hql, Object... values) {
 		Assert.hasText(hql);
@@ -163,6 +173,7 @@ public class BaseDao<T>{
 		}
 		return query;
 	}
+
 	/**
 	 * 去除hql的select 子句，未考虑union的情况,用于pagedQuery.
 	 *
@@ -171,10 +182,11 @@ public class BaseDao<T>{
 	private static String removeSelect(String hql) {
 		Assert.hasText(hql);
 		int beginPos = hql.toLowerCase().indexOf("from");
-		Assert.isTrue(beginPos != -1, " hql : " + hql + " must has a keyword 'from'");
+		Assert.isTrue(beginPos != -1, " hql : " + hql
+				+ " must has a keyword 'from'");
 		return hql.substring(beginPos);
 	}
-	
+
 	/**
 	 * 去除hql的orderby 子句，用于pagedQuery.
 	 *
@@ -182,7 +194,8 @@ public class BaseDao<T>{
 	 */
 	private static String removeOrders(String hql) {
 		Assert.hasText(hql);
-		Pattern p = Pattern.compile("order\\s*by[\\w|\\W|\\s|\\S]*", Pattern.CASE_INSENSITIVE);
+		Pattern p = Pattern.compile("order\\s*by[\\w|\\W|\\s|\\S]*",
+				Pattern.CASE_INSENSITIVE);
 		Matcher m = p.matcher(hql);
 		StringBuffer sb = new StringBuffer();
 		while (m.find()) {
@@ -199,8 +212,10 @@ public class BaseDao<T>{
 	public void setHibernateTemplate(HibernateTemplate hibernateTemplate) {
 		this.hibernateTemplate = hibernateTemplate;
 	}
-    public  Session getSession() {
-        return SessionFactoryUtils.getSession(hibernateTemplate.getSessionFactory(),true);
-    }
-	
+
+	public Session getSession() {
+		return SessionFactoryUtils.getSession(
+				hibernateTemplate.getSessionFactory(), true);
+	}
+
 }
