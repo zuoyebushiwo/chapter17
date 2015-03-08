@@ -29,6 +29,7 @@ public class ForumServiceTest extends BaseServiceTest {
 	@SpringBean("userService")
 	private UserService userService;
 
+	// ①在测试初始化中，消除Hibernate二级缓存，避免影响测试
 	@Before
 	public void init() {
 		SessionFactory sf = hibernateTemplate.getSessionFactory();
