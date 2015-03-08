@@ -5,7 +5,7 @@ import org.unitils.UnitilsJUnit4;
 import org.unitils.spring.annotation.SpringApplicationContext;
 import org.unitils.spring.annotation.SpringBean;
 
-@SpringApplicationContext({ "/resources/baobaotao-service.xml", "/resources/baobaotao-dao.xml" })
+@SpringApplicationContext({ "baobaotao-service.xml", "baobaotao-dao.xml" })
 public class BaseServiceTest extends UnitilsJUnit4 {
 
 	@SpringBean("hibernateTemplate")

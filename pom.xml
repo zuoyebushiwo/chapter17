@@ -5,7 +5,7 @@
   <groupId>com.baobaotao</groupId>
   <artifactId>chapter17</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <packaging>jar</packaging>
+  <packaging>war</packaging>
 
   <name>chapter17</name>
   <url>http://maven.apache.org</url>
